@@ -25,4 +25,8 @@ public class TestDao {
     public void update(UserVO userVO) {
         testServiceMapper.update(userVO);
     }
+
+    public void delete(String id) {
+        testServiceMapper.delete(id);
+    }
 }

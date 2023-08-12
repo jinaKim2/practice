@@ -40,4 +40,7 @@ public class TestService {
     }
 
 
+    public void delete(String id) {
+        testDao.delete(id);
+    }
 }

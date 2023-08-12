@@ -31,4 +31,10 @@
         set last_login_dt = sysdate(), user_pw = #{userPw}
         where user_id = #{userId}
     </update>
+
+    <delete id="delete" parameterType="String">
+        delete from temp_account
+        where user_id = #{userId}
+    </delete>
+
 </mapper>

@@ -92,4 +92,12 @@ public class TestController {
         testService.update(id, pw);
     }
 
+    @RequestMapping("/delete")
+    public void delete(HttpServletRequest rep){
+
+        String id = rep.getParameter("id");
+
+        testService.delete(id);
+    }
+
 }

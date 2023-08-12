@@ -2,6 +2,7 @@ package com.example.practice.testservice;
 
 import com.example.practice.persistance.UserVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Mapper
@@ -13,4 +14,5 @@ public interface TestServiceMapper {
 
     void update(UserVO user);
 
+    void delete(@Param("userId") String id);
 }
