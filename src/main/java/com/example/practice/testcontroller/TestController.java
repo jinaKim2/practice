@@ -5,12 +5,13 @@ import com.example.practice.testdao.TestDao;
 import com.example.practice.testservice.TestService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.lang.constant.Constable;
 
 @RestController
+@RequestMapping("")
 public class TestController {
 
     /*
@@ -24,6 +25,14 @@ public class TestController {
     @Autowired
     TestService testService;
 
+    @GetMapping("/main")
+    public ModelAndView main(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("msg", "서버에서 받아온 값 입니다.");
+        // modelAndView.setViewName("page/main/index");
+        modelAndView.setViewName("page/main/index2");
+        return modelAndView;
+    }
 
     /**
      * 1. HttpServletRequest req : GET/POST 요청 파라미터 수신
@@ -33,15 +42,17 @@ public class TestController {
      *  2). localhost:8080/find?id=kjaS2khs&pw=password486
      *   - 파라미터 2개 요청
      */
-    @RequestMapping("/find")
-    public UserVO find(HttpServletRequest req){
+    @PostMapping("/find")
+    public UserVO find(@ModelAttribute final UserVO userVo){
         /**
          * 2. String id = req.getParameter("id");
          *  1). req에서 "id"라는 파라미터의 값을 가져와 String id에 넣어 줌
          *   - String id = "kjaS2khs";
          */
-        String id = req.getParameter("id");
-        String pw = req.getParameter("pw");
+        // String id = req.getParameter("id");
+        // String pw = req.getParameter("pw");
+        String id = userVo.getUserId();
+        String pw = userVo.getUserPw();
 
         /**
          * 3. UserVO findResult = testService.find(id, pw);

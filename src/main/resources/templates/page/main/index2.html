@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>프레시지</title>
+</head>
+<style>
+    body {
+        background-color: #1a1a1a;
+        color: #e6e6e6;
+    }
+
+    button {
+        background-color: #0080ff;
+        color: #e6e6e6;
+        padding: 10px 20px;
+        border-radius: 5px;
+        margin-right: 10px;
+    }
+</style>
+<script th:src="@{/js/jquery.js}"></script>
+<script>
+$(document).ready(function(){
+
+    alert("무조건 시작");
+
+    /** 1번, 버튼 이벤트 */
+    $('#btnTest').click(it=>{
+        alert("버튼 클릭");
+    })
+
+    let $loginForm = $('#loginForm').serialize();
+
+    /** 2번, 버튼 이벤트 */
+    $('#btnLogin').click(it=>{
+        // let params = JSON.stringify($loginForm);
+        let params = {
+            userId : $('#userId').val(),
+            userPw : $('#userPw').val()
+        }
+
+        console.log(params);
+    })
+
+});
+</script>
+<body>
+
+<form id="loginForm" name="loginForm" method="post">
+    <div style="text-align: center; width: 25%; margin: 0 auto; margin-top: 15%; border: 1px solid #dadce0; border-radius: 8px;">
+        <div style="">
+            <div style="padding: 10px;">
+                <p th:text="${msg}"></p>
+            </div>
+            <div style="padding: 10px;">
+                <span style="display: inline-block; width: 7%;"> ID </span>
+                <input type="text" th:id="userId" th:name="userId"/>
+            </div>
+            <div style="padding: 10px;">
+                <span style="display: inline-block; width: 7%;"> PW </span>
+                <input type="password" th:id="userPw" th:name="userPw"/>
+            </div>
+
+        </div>
+    </div>
+</form>
+<div style="text-align: center; margin: 10px;">
+    <button id="btnTest">테스트</button>
+    <button id="btnLogin">로그인</button>
+</div>
+<!--
+    <div style="border: 1px solid; width: 50%; background-color: skyblue; text-size:50px;">
+         아놔~~ 킹받넹~~
+    </div>
+-->
+</body>
+
+</html>
