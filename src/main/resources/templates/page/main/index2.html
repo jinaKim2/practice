@@ -24,22 +24,148 @@ $(document).ready(function(){
 
     alert("무조건 시작");
 
-    /** 1번, 버튼 이벤트 */
+    /** 1번, 버튼 클릭 이벤트 */
     $('#btnTest').click(it=>{
         alert("버튼 클릭");
     })
 
-    let $loginForm = $('#loginForm').serialize();
+    /** 클래스 버튼 클릭 이벤트 */
+    $('.t').click(it=>{
+        alert("클래스로 클릭");
+    })
 
-    /** 2번, 버튼 이벤트 */
-    $('#btnLogin').click(it=>{
-        // let params = JSON.stringify($loginForm);
+    /**
+     * 비동기 통신 자세한 설명
+     *  - https://joshua1988.github.io/web-development/javascript/javascript-asynchronous-operation/
+     *  - 자바스크립트 비동기 통신 방식에 대해 엄청 자세히 설명되어 있으니 꼭 보기 (저도 봤음)
+     *  - 시리즈 2, 3 까지 필수
+     * */
+
+    /** HTTP METHOD
+     * 1. GET       : Read
+     * 2. POST      : Create
+     * 3. PUT       : Update
+     * 4. DELETE    : Delete
+     * */
+    /** 2번, ajax 비동기 통신 */
+    $('#btnAjax').click(function (){
+
         let params = {
             userId : $('#userId').val(),
             userPw : $('#userPw').val()
         }
-
         console.log(params);
+
+        let jsonParams = JSON.stringify(params);
+        console.log(jsonParams);
+
+        debugger; // 크롬에 디버깅모드 걸리는데 F10 누르면 한칸, F8 누르면 전체 통과
+
+        setTimeout(() =>
+
+            // 아래 파라미터를 담아 url 호출
+            $.ajax({
+                url: "/find.do",
+                data: jsonParams,
+                type: "POST",
+                dataType: "json",
+                contentType: 'application/json; charset=UTF-8'
+            })
+                // HTTP 요청이 성공하면 요청한 데이터가 done() 메소드로 전달 됨
+                .done(function(result){
+                    alert("입력하신 ID의 사용자명은 [" + result.userNm + "] 입니다.");
+                })
+                // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달 됨
+                .fail(function(xhr, status, errorThrown){
+                    alert("오류가 발생했습니다.");
+                    console.log("오류명 : " + errorThrown);
+                    console.log("상태 : " + status);
+                })
+                // option
+                // HTTP 요청이 성공하거나 실패하는 것에 상관없이 언제나 always() 메소드가 실행 됨
+                .always(function(xhr, status){
+                    alert("요청이 완료되었습니다.");
+                })
+
+        , 3000);
+
+
+        alert("아~~~ 위에꺼 에이작슨지 뭔지 관심 없구연~~");
+    })
+
+    /** 3번, fetch 비동기 통신 */
+    $('#btnFetch').click(it=>{
+
+        /**
+         * HTTP 통신 스테이터스 (로그인 버튼 ★빵★ 누른 후)
+         * 1xx : 처리 중
+         * 2xx : 정상처리
+         * 3xx : 리다이렉션 필요 (페이지 주소가 이동됐거나 리소스 찾을 수 없을 때)
+         * 4xx : 클라이언트 오류
+         *  - id 정보를 입력하지 않았거나 등의 휴먼 에러나, 개발 이슈 등의 여러가지 문제, 가장 많이 발생
+         * 5xx : 서버 오류
+         *  - 서버의 상태가 정상이 아닐 때 발생
+         *  - 네트워크 오류나, 서버 자체의 오류나, 개발 소스의 오류 등 백엔드에서 오류가 났을 때 발생
+         * */
+
+        // 1. GET
+        // 조회 (userId = kja01)
+        // GET 방식은 기본 설정값 (default)
+        // [요청 : request], [응답 : response]
+        // 해당 메소드의 응답 객체는 JSON
+        fetch("http://localhost:8080/find/kja01")
+            .then((response) => response.json())
+            .then((data) => console.log(data))  // data는 JSON 형식어야 함 (@ResponseBody)
+
+        // 2. POST (은닉)
+        // case 1. Form 등을 사용해서 데이터를 만들어 보낼 때
+        // case 2. 보내는 데이터의 양이 많을 때
+        // case 3. 비밀번호 등 개인정보를 보낼 때
+        // GET 방식 이외의 방식은 아래 설정 필요
+        // 1). method: "POST",
+        // 2). headers : {"Content-type" : "application/json"}
+        // 3). body : JSON.stringify({userId: "kja01"})
+        // JSON? stringify?
+        fetch("http://localhost:8080/find", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                userId: "kja01"
+                // , 혹은 $('form').serialize()
+            }),
+            }).then((response) => response.json())
+              .then((data) => console.log(data))
+
+        // 3. PUT/PATCH
+        // 수정 기능을 담당
+        // PUT   : 전체 수정
+        // PATCH : 일부 수정
+        fetch("http://localhost:8080/find", {
+            method: "PUT",  //"PATCH"
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                userId: "kja01"
+            }),
+            }).then((response) => response.json())
+            .then((data) => console.log(data))
+
+        // 4. DELETE
+        // 삭제 기능을 담당
+        // 보낼 데이터가 없기 때문에 header, body 옵션이 필요 없음
+        fetch("http://localhost:8080/find/kja01", {
+            method: "PUT",  //"PATCH"
+        }).then((response) => response.json())
+            .then((data) => console.log(data))
+
+    })
+
+    /** 4번, axios 비동기 통신 */
+    $('#btnAxios').click(it=>{
+
     })
 
 });
@@ -56,17 +182,19 @@ $(document).ready(function(){
                 <span style="display: inline-block; width: 7%;"> ID </span>
                 <input type="text" th:id="userId" th:name="userId"/>
             </div>
-            <div style="padding: 10px;">
+            <div style="padding: 10px; margin-bottom: 15px;">
                 <span style="display: inline-block; width: 7%;"> PW </span>
-                <input type="password" th:id="userPw" th:name="userPw"/>
+                <input type="text" th:id="userPw" th:name="userPw"/>
             </div>
 
         </div>
     </div>
 </form>
 <div style="text-align: center; margin: 10px;">
-    <button id="btnTest">테스트</button>
-    <button id="btnLogin">로그인</button>
+    <button id="btnTest" class="t">테스트</button>
+    <button id="btnAjax" class="t">로그인_ajax</button>
+    <button id="btnFetch" class="t">로그인_fetch</button>
+    <button id="btnAxios" class="t">로그인_axios</button>
 </div>
 <!--
     <div style="border: 1px solid; width: 50%; background-color: skyblue; text-size:50px;">
