@@ -21,18 +21,17 @@
 <script th:src="@{/js/jquery.js}"></script>
 <script>
 $(document).ready(function(){
+    /** 1번, 버튼 클릭 이벤트
+        $('#btnTest').click(function() {
+            alert("아이디로 클릭");
+        })
+    */
 
-    alert("무조건 시작");
-
-    /** 1번, 버튼 클릭 이벤트 */
-    $('#btnTest').click(it=>{
-        alert("버튼 클릭");
-    })
-
-    /** 클래스 버튼 클릭 이벤트 */
-    $('.t').click(it=>{
-        alert("클래스로 클릭");
-    })
+    /** 클래스 버튼 클릭 이벤트
+        $('.t').click(function() {
+            alert("클래스로 클릭");
+        })
+    */
 
     /**
      * 비동기 통신 자세한 설명
@@ -50,18 +49,16 @@ $(document).ready(function(){
     /** 2번, ajax 비동기 통신 */
     $('#btnAjax').click(function (){
 
+        //debugger; // 크롬에 디버깅모드 걸리는데 F10 누르면 한칸, F8 누르면 전체 통과
+
         let params = {
             userId : $('#userId').val(),
             userPw : $('#userPw').val()
         }
-        console.log(params);
 
         let jsonParams = JSON.stringify(params);
-        console.log(jsonParams);
 
-        debugger; // 크롬에 디버깅모드 걸리는데 F10 누르면 한칸, F8 누르면 전체 통과
-
-        setTimeout(() =>
+        // setTimeout(() =>    // 에이작스 예제 때문에 일부러 3초 뒤에 실행되게 작성
 
             // 아래 파라미터를 담아 url 호출
             $.ajax({
@@ -74,6 +71,10 @@ $(document).ready(function(){
                 // HTTP 요청이 성공하면 요청한 데이터가 done() 메소드로 전달 됨
                 .done(function(result){
                     alert("입력하신 ID의 사용자명은 [" + result.userNm + "] 입니다.");
+
+
+                    lfn_callback(result);
+
                 })
                 // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달 됨
                 .fail(function(xhr, status, errorThrown){
@@ -87,8 +88,7 @@ $(document).ready(function(){
                     alert("요청이 완료되었습니다.");
                 })
 
-        , 3000);
-
+        //, 3000);
 
         alert("아~~~ 위에꺼 에이작슨지 뭔지 관심 없구연~~");
     })
@@ -163,11 +163,10 @@ $(document).ready(function(){
 
     })
 
-    /** 4번, axios 비동기 통신 */
-    $('#btnAxios').click(it=>{
-
-    })
-
+    function lfn_callback(result){
+        alert("콜백함수 실행!!");
+        alert(result.userNm);
+    }
 });
 </script>
 <body>

@@ -21,8 +21,8 @@ public class TestController {
     public ModelAndView main(){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("msg", "서버에서 받아온 값 입니다.");
-        modelAndView.setViewName("page/main/index");
-        // modelAndView.setViewName("page/main/index2");
+        // modelAndView.setViewName("page/main/index");
+        modelAndView.setViewName("page/main/index2");
         return modelAndView;
     }
 
