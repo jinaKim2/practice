@@ -31,6 +31,8 @@ public class TestController {
 
         String id = userVo.getUserId();
         String pw = userVo.getUserPw();
+
+/*
         String name = "";
 
         if(id.equals("khs88")) {
@@ -45,8 +47,9 @@ public class TestController {
         findResult.setUserId(id);
         findResult.setUserPw(pw);
         findResult.setUserNm(name);
+*/
 
-        // UserVO findResult = testService.find(id, pw);
+        UserVO findResult = testService.find(id, pw);
 
         return findResult;
         /*
