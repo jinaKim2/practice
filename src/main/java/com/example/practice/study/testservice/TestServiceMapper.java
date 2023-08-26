@@ -1,9 +1,8 @@
-package com.example.practice.testservice;
+package com.example.practice.study.testservice;
 
-import com.example.practice.persistance.UserVO;
+import com.example.practice.study.persistance.UserVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
 @Mapper
 public interface TestServiceMapper {

@@ -1,0 +1,21 @@
+package com.example.practice.jinaBoard.boardservice;
+
+import com.example.practice.jinaBoard.boaddao.BoardDao;
+import com.example.practice.study.persistance.UserVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class BoardService {
+    @Autowired
+    BoardDao boardDao;
+
+    public List<String> list() {
+
+        List<String> result = boardDao.list();
+
+        return result;
+    }
+}

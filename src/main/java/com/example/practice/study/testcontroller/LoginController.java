@@ -1,7 +1,7 @@
-package com.example.practice.testcontroller;
+package com.example.practice.study.testcontroller;
 
-import com.example.practice.persistance.UserVO;
-import com.example.practice.testservice.TestService;
+import com.example.practice.study.persistance.UserVO;
+import com.example.practice.study.testservice.TestService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -9,10 +9,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @RequestMapping("")
-public class BoardController {
+public class LoginController {
 
     /**
-     * 로그인 이후 메인페이지 리스트용 컨트롤러
+     * 로그인 구현 컨트롤러
      * */
 
     @Autowired

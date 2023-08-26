@@ -1,4 +1,4 @@
-package com.example.practice.persistance;
+package com.example.practice.study.persistance;
 
 import lombok.Getter;
 import lombok.Setter;

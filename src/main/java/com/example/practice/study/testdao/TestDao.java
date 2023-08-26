@@ -1,7 +1,7 @@
-package com.example.practice.testdao;
+package com.example.practice.study.testdao;
 
-import com.example.practice.persistance.UserVO;
-import com.example.practice.testservice.TestServiceMapper;
+import com.example.practice.study.persistance.UserVO;
+import com.example.practice.study.testservice.TestServiceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
