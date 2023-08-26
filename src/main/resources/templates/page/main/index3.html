@@ -23,16 +23,15 @@
 $(document).ready(function(){
 
     $('#btnSearch').click(function (){
-        /*
+
             let params = {
-                userId : $('#userId').val(),
-                userPw : $('#userPw').val()
+                userId : 'test'
             }
 
             let jsonParams = JSON.stringify(params);
-        */
+
         $.ajax({
-            url: "/find.do",
+            url: "/main.do",
             data: jsonParams,
             type: "POST",
             dataType: "json",
@@ -48,9 +47,13 @@ $(document).ready(function(){
         })
     })
 
-    function lfn_callback(result){
+    $('#btnInsert').click(function (){
+        location.href='/moveRegPage.do';
+    })
+
+        function lfn_callback(result){
         alert("콜백함수 실행!!");
-        alert(result.userNm);
+        alert(result);
     }
 });
 </script>
@@ -59,15 +62,15 @@ $(document).ready(function(){
 <table id="boardTable">
     <thead>
     <tr>
-        <th>번호</th>
-        <th>제목</th>
-        <th>등록자</th>
-        <th>등록일자</th>
-        <th>조회수</th>
+        <th style="width: 10%;">번호</th>
+        <th style="width: 30%;">제목</th>
+        <th style="width: 20%;">등록자</th>
+        <th style="width: 20%;">등록일자</th>
+        <th style="width: 20%;">조회수</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="list : ${result}">
+    <tr th:each="list : ${msg}">
         <td th:text="${list.id}"></td>
         <td th:text="${list.title}"></td>
         <td th:text="${list.regId}"></td>
@@ -79,6 +82,7 @@ $(document).ready(function(){
 
 <div style="text-align: center; margin: 10px;">
     <button id="btnSearch" class="t">조회</button>
+    <button id="btnInsert" class="t">등록</button>
 </div>
 </body>
 

@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.practice.study.testservice.TestServiceMapper">
+<mapper namespace="com.example.practice.jinaBoard.boardservice.BoardServiceMapper">
 
-    <select id="list" resultType="String">
+    <select id="list" resultType="HashMap">
         select  id              as id
                 , title         as title
-                , visit_cnt     as visitcnt
-                , reg_id        as regid
-                , reg_dt        as regdt
-                , reg_id        as regid
+                , visit_cnt     as visitCnt
+                , reg_id        as regId
+                , reg_dt        as regDt
         from t_board
     </select>
+
+    <insert id="insert" parameterType="com.example.practice.jinaBoard.persistance.BoardVO">
+        insert into t_board2(
+                            content
+                            , visit_cnt
+                            , reg_id
+                            , reg_dt
+                            , del_yn
+        ) values (
+                     #{content}
+                 , #{visitCnt}
+                 , #{regId}
+                 , #{regDt}
+                 , #{delYn}
+                 )
+    </insert>
+
 
 </mapper>

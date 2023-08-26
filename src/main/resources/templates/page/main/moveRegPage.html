@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<script th:src="@{/js/jquery.js}"></script>
+<script>
+$(document).ready(function(){
+
+    $('#btnInsert').click(function () {
+
+        let params = {
+            content: $('#content').val()
+        }
+
+        let jsonParams = JSON.stringify(params);
+
+        // 아래 파라미터를 담아 url 호출
+        $.ajax({
+            url: "/registBoard.do",             // url 변경 했음
+            data: jsonParams,
+            type: "POST",
+            dataType: "json",
+            contentType: 'application/json; charset=UTF-8'
+        })
+            // HTTP 요청이 성공하면 요청한 데이터가 done() 메소드로 전달 됨
+            .done(function (result) {
+                lfn_callback(result);
+                location.href = "main.do";
+            })
+            // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달 됨
+            .fail(function (xhr, status, errorThrown) {
+                alert("오류가 발생했습니다.");
+                console.log("오류명 : " + errorThrown);
+                console.log("상태 : " + status);
+            })
+    })
+
+    function lfn_callback(result){
+            alert("등록되었습니다.");
+
+    }
+
+})
+</script>
+
+<body>
+<input type="text" id="content" name="content"/>
+
+<div style="text-align: center; margin: 10px;">
+    <button id="btnInsert" class="t">등록</button>
+</div>
+</body>
+</html>

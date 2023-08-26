@@ -14,7 +14,7 @@ public class TestController {
     @Autowired
     TestService testService;
 
-    @GetMapping("/main.do")
+    @GetMapping("/main2.do")
     public ModelAndView main(){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("msg", "서버에서 받아온 값 입니다.");
