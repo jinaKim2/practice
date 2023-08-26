@@ -1,37 +1,27 @@
 package com.example.practice.jinaBoard.boardcontroller;
 
+import com.example.practice.jinaBoard.boardservice.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("")
 public class BoardController {
 
     @Autowired
-    TestService testService;
+    BoardService boardService;
 
     @GetMapping("/main.do")
     public ModelAndView main(){
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("msg", "서버에서 받아온 값 입니다.");
-        // modelAndView.setViewName("page/main/index");
-        modelAndView.setViewName("page/main/index2");
+
+        List<String> result = boardService.list();
+
+        modelAndView.addObject("msg", result);
+        modelAndView.setViewName("page/main/index3");
         return modelAndView;
-    }
-
-    @PostMapping("/find.do")
-    public UserVO find(@RequestBody UserVO userVo){
-
-        String id = userVo.getUserId();
-        String pw = userVo.getUserPw();
-
-        UserVO findResult = testService.find(id, pw);
-
-        return findResult;
-        /*
-         * 5. 비고
-         *  1). "kjaS2khs" 데이터 삭제 영구 금ㅈ;
-         * */
     }
 }
