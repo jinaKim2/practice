@@ -10,5 +10,10 @@ import java.util.List;
 public interface BoardServiceMapper {
     List<HashMap> list();
 
+    List<HashMap> list2();
+
     int insert(BoardVO boardVO);
+
+
+    BoardVO findRefId(BoardVO boardVO);
 }

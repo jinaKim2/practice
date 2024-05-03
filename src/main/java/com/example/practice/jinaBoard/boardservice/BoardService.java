@@ -20,10 +20,21 @@ public class BoardService {
 
         return result;
     }
-    public int insert(BoardVO boardVO) {
+
+    public List<HashMap> list2() {
+
+        List<HashMap> reslt = boardDao.list2();
+
+        return reslt;
+    }
+
+
+
+    /* public int insertTb1(BoardVO boardVO) {
 
         int result = boardDao.insert(boardVO);
+        BoardVO selectKey = boardDao.findRefId(boardVO);
 
         return result;
-    }
+    }*/
 }

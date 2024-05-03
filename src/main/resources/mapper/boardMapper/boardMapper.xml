@@ -3,7 +3,7 @@
 <mapper namespace="com.example.practice.jinaBoard.boardservice.BoardServiceMapper">
 
     <select id="list" resultType="HashMap">
-        select  id              as id
+        select    id            as id
                 , title         as title
                 , visit_cnt     as visitCnt
                 , reg_id        as regId
@@ -11,15 +11,24 @@
         from t_board
     </select>
 
+    <select id="list2" resultType="HashMap">
+        select    id         as id
+             , title         as title
+             , visit_cnt     as visitCnt
+             , reg_id        as regId
+             , reg_dt        as regDt
+        from t_board
+    </select>
+
     <insert id="insert" parameterType="com.example.practice.jinaBoard.persistance.BoardVO">
         insert into t_board2(
-                            content
+                              content
                             , visit_cnt
                             , reg_id
                             , reg_dt
                             , del_yn
         ) values (
-                     #{content}
+                   #{content}
                  , #{visitCnt}
                  , #{regId}
                  , #{regDt}

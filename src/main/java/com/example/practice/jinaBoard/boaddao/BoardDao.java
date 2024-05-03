@@ -18,10 +18,18 @@ public class BoardDao {
 
         return result;
     }
+    public List<HashMap> list2() {
 
-    public int insert(BoardVO boardVO) {
-        int result = boardServiceMapper.insert(boardVO);
+        List<HashMap> result = boardServiceMapper.list2();
 
         return result;
     }
+
+    public int insert(BoardVO boardVO) {
+        int result = boardServiceMapper.insert(boardVO);
+        BoardVO selectKey = boardServiceMapper.findRefId(boardVO);
+
+        return result;
+    }
+
 }

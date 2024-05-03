@@ -14,7 +14,7 @@ public class TestController {
     @Autowired
     TestService testService;
 
-    @GetMapping("/main2.do")
+    @GetMapping("/main3.do")
     public ModelAndView main(){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("msg", "서버에서 받아온 값 입니다.");
@@ -55,7 +55,7 @@ public class TestController {
          * */
     }
 
-    @PostMapping("/insert.do")
+    @GetMapping("/insert.do")
     public void insert(HttpServletRequest req){
 
         String id = req.getParameter("id");
