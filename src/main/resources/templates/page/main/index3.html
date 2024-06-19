@@ -20,9 +20,9 @@
 </style>
 <script th:src="@{/js/jquery.js}"></script>
 <script>
-$(document).ready(function(){
+    $(document).ready(function(){
 
-    $('#btnSearch').click(function (){
+        $('#btntest').click(function (){
 
             let params = {
                 userId : 'test'
@@ -30,36 +30,36 @@ $(document).ready(function(){
 
             let jsonParams = JSON.stringify(params);
 
-        $.ajax({
-            url: "/main.do",
-            data: jsonParams,
-            type: "POST",
-            dataType: "json",
-            contentType: 'application/json; charset=UTF-8'
+            $.ajax({
+                url: "/main2.do",
+                data: jsonParams,
+                type: "POST",
+                dataType: "json",
+                contentType: 'application/json; charset=UTF-8'
+            })
+                .done(function(result){
+                    lfn_callback(result);
+                })
+                .fail(function(xhr, status, errorThrown){
+                    alert("오류가 발생했습니다.");
+                    console.log("오류명 : " + errorThrown);
+                    console.log("상태 : " + status);
+                })
         })
-        .done(function(result){
-            lfn_callback(result);
-        })
-        .fail(function(xhr, status, errorThrown){
-            alert("오류가 발생했습니다.");
-            console.log("오류명 : " + errorThrown);
-            console.log("상태 : " + status);
-        })
-    })
 
-    $('#btnInsert').click(function (){
-        location.href='/moveRegPage.do';
-    })
+        $('#btnInsert').click(function (){
+            location.href='/moveRegPage2.do';
+        })
 
         function lfn_callback(result){
-        alert("콜백함수 실행!!");
-        alert(result);
-    }
-});
+            alert("콜백함수 실행!!");
+            alert(result);
+        }
+    });
 </script>
 <body>
-
 <table id="boardTable">
+    <input> <div style="text-align: center; margin: 10px;"> <button id="btnInsertBoard" class="t">검색</button> </div>
     <thead>
     <tr>
         <th style="width: 10%;">번호</th>
@@ -72,10 +72,20 @@ $(document).ready(function(){
     <tbody>
     <tr th:each="list : ${msg}">
         <td th:text="${list.id}"></td>
-        <td th:text="${list.title}"></td>
+        <!--
+        <a th:href="@{/board/view}">
+            <td th:text="${list.title}"></td>
+        </a>
+        -->
+        <td><a th:href="@{/board/view}" th:text="${list.title}"></a></td>
+
+
+
         <td th:text="${list.regId}"></td>
         <td th:text="${list.regDt}"></td>
-        <td th:text="${list.visitCnt}"></td>
+        <td th:text="${list.visitCnt}">
+        </a>
+        </td>
     </tr>
     </tbody>
 </table>
@@ -83,6 +93,8 @@ $(document).ready(function(){
 <div style="text-align: center; margin: 10px;">
     <button id="btnSearch" class="t">조회</button>
     <button id="btnInsert" class="t">등록</button>
+    <button id="btnUpdata" class="t">수정</button>
+    <button id="btnDeldte" class="t">삭제</button>
 </div>
 </body>
 

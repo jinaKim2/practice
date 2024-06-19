@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.practice.dinner.Service.RandomServiceMapper">
+
+    <insert id="nameSave" parameterType="com.example.practice.dinner.persistance.RandomVo">
+        insert into t_random(
+            user_name
+        ) values(
+            #{userName}
+        )
+
+    </insert>
+
+    <select id="nameInsert" parameterType="com.example.practice.dinner.persistance.RandomVo" resultType="com.example.practice.dinner.persistance.RandomVo">
+        select    id         as id
+                , user_name  as userName
+                , ifnull(sheet_num, 0)  as sheetNum
+        from t_random
+        where user_name = #{userName}
+    </select>
+
+    <update id="update" parameterType="com.example.practice.dinner.persistance.RandomVo">
+        update t_random
+        set sheet_num = #{sheetNum}
+        where id = #{id}
+    </update>
+
+    <select id="selectTRandom" parameterType="com.example.practice.dinner.persistance.RandomVo" resultType="com.example.practice.dinner.persistance.RandomVo">
+        select    id         as id
+                 , user_name  as userName
+                 , ifnull(sheet_num, 0)  as sheetNum
+        from t_random
+        where sheet_num &gt; 0
+    </select>
+
+    <!-- 이미 배정된 자리를 가져오는 쿼리 -->
+    <select id="listAssignSeats" resultType="com.example.practice.dinner.persistance.RandomVo">
+        select    id         as id
+             , user_name  as userName
+             , sheet_Num   as sheetNum
+        from t_random
+        where sheet_num &gt; 0
+    </select>
+
+</mapper>
+
+

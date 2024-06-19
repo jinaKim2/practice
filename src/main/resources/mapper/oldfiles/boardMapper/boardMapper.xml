@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.practice.oldfiles.jinaBoard.boardservice.BoardServiceMapper">
+
+    <select id="list" resultType="HashMap">
+        select    id            as id
+                , title         as title
+                , visit_cnt     as visitCnt
+                , reg_id        as regId
+                , reg_dt        as regDt
+                , title         as test
+        from t_board
+        where del_yn != 'Y'
+    </select>
+    <select id="findById" resultType="Object">
+        select    id            as id
+             , title         as title
+             , visit_cnt     as visitCnt
+             , reg_id        as regId
+             , reg_dt        as regDt
+             , title         as test
+        from t_board
+        where del_yn != 'Y'
+    </select>
+
+    <select id="listBykhs" resultType="com.example.practice.oldfiles.jinaBoard.persistance.BoardVO">
+        select     id            as id
+                 , title         as title
+                 , visit_cnt     as visitCnt
+                 , reg_id        as regId
+                 , reg_dt        as regDt
+                 , title         as test
+        from t_board
+        where del_yn != 'Y'
+    </select>
+
+    <insert id="save" parameterType="com.example.practice.oldfiles.jinaBoard.persistance.TestVO">
+        insert into test (
+                             id
+                           , title
+                           , content
+                           , reg_id
+                           , ref_id
+        ) values (
+                       #{id}
+                     , #{title}
+                     , #{regId}
+                     , #{content}
+                     , #{refId}
+                 )
+    </insert>
+
+    <insert id="saveTboard" parameterType="com.example.practice.oldfiles.jinaBoard.persistance.BoardVO">
+        insert into t_board ( id
+                            , title
+                            , visit_cnt
+                            , reg_id
+                            , reg_dt
+        )
+        values (  #{id}
+                , #{title}
+                , #{visitCnt}
+                , #{regId}
+                , SYSDATE()
+         )
+    </insert>
+
+    <select id="findMaxId" resultType="Long">
+        select MAX(id) as id
+        from t_board
+        where del_yn != 'Y'
+    </select>
+
+    <insert id="saveTest" parameterType="com.example.practice.oldfiles.jinaBoard.persistance.TestVO">
+        insert into test (  ref_id
+                            , content
+                            , reg_id
+        )
+        values ( #{refId}
+                , #{content}
+                , #{regId}
+        )
+    </insert>
+
+    <select id="list2" resultType="HashMap">
+        select    id            as id
+             , title         as title
+             , visit_cnt     as visitCnt
+             , reg_id        as regId
+             , reg_dt        as regDt
+             , title         as test
+        from t_board
+        where del_yn != 'Y'
+
+    </select>
+
+    <insert id="insert2" parameterType="com.example.practice.oldfiles.jinaBoard.persistance.BoardVO">
+        insert into t_board(
+                              id
+                            , title
+                            , visit_cnt
+                            , reg_id
+                            , reg_dt
+        ) values (
+                   #{id}
+                 , #{title}
+                 , #{visitCnt}
+                 , #{regId}
+                 , SYSDATE()
+        )
+    </insert>
+
+    <update id="update2" parameterType="com.example.practice.oldfiles.jinaBoard.persistance.BoardVO">
+        update t_board
+        set title =#{title}
+            , mod_id = #{modId}
+            , mod_dt = #{modDt}
+        where id = #{id}
+    </update>
+
+    <delete id="delete2" parameterType="String">
+        delete from t_board
+        where id = #{id}
+    </delete>
+
+
+</mapper>

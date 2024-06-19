@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>게시물작성(김진아)</title>
+
+<style>
+
+    .layout {
+        width: 500px;
+        margin: 0 auto;
+        margin-top: 40px;
+    }
+
+    .layout input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .layout textarea {
+        width: 100%;
+        margin-top: 10px;
+        min-height: 300px;
+    }
+</style>
+<script th:src="@{js/jquery.js}"></script>
+<script>
+$(document).ready(function(){
+    $('#btnRegist').on('click', function(){
+        let postData = {
+            /*
+            * 선택자
+            * id = $('#regId')
+            * name = $('input[name=content]')
+            * */
+            regId: $('#regId').val(),
+            title: $('#title').val(),
+            content: $('#content').val()
+        }
+        let jsonParams = JSON.stringify(postData);
+
+        console.log('postData:'+ postData);
+        console.log('jsonParams:' + jsonParams);
+        // debugger;
+
+        $.ajax({
+            type: 'POST',
+            url:'/postPage.do',
+            data: jsonParams,
+            contentType: 'application/json; charset=UTF-8'
+        })
+
+            .done(function (result){
+
+                    location.reload();
+                    window.location.href = '/main2.do'
+
+                    function lfn_callback(result){
+                    }
+                    lfn_callback(result)
+
+            })
+
+
+        })
+
+
+})
+
+
+</script>
+</head>
+<body>
+<div class="layout">
+
+    <form action="/posts.do" method="post">
+        <input id="regId" name="regId" type="text" placeholder="아이디를 입력해주세요." required>
+        <input id="title" name= "title" type="text" placeholder="제목을 입력해주세요." required>
+        <textarea id="content" name="content" placeholder="내용을 입력해주세요." required></textarea>
+        <button id="btnRegist"> 등록 </button>
+        <button id="btnCancel" onclick="location.href='main2.do'">취소</button>
+    </form>
+
+</div>
+
+</body>
+</html>
+
+<!-- submit은 데이터를 전송하는 역할을 함 + 버튼 클릭 시 form안에 두가지 정보가 지정한 주소로 넘어감*/
+    /*document.getElementById('postData').addEventListener('submit',function (event){
+        let title = document.getElementById('title').value.trim();
+        let content = document.getElementById('content').value.trim();
+
+        if(!title || !content) {
+            event.preventDefault();
+            alert('제목과 내용을 모두 입력해주세요.');
+        }
+        }
+    )*/ -->

@@ -20,45 +20,45 @@
 </style>
 <script th:src="@{/js/jquery.js}"></script>
 <script>
-$(document).ready(function(){
-    /** 1번, 버튼 클릭 이벤트
-        $('#btnTest').click(function() {
+    $(document).ready(function(){
+        /** 1번, 버튼 클릭 이벤트
+         $('#btnTest').click(function() {
             alert("아이디로 클릭");
         })
-    */
+         */
 
-    /** 클래스 버튼 클릭 이벤트
-        $('.t').click(function() {
+        /** 클래스 버튼 클릭 이벤트
+         $('.t').click(function() {
             alert("클래스로 클릭");
         })
-    */
+         */
 
-    /**
-     * 비동기 통신 자세한 설명
-     *  - https://joshua1988.github.io/web-development/javascript/javascript-asynchronous-operation/
-     *  - 자바스크립트 비동기 통신 방식에 대해 엄청 자세히 설명되어 있으니 꼭 보기 (저도 봤음)
-     *  - 시리즈 2, 3 까지 필수
-     * */
+        /**
+         * 비동기 통신 자세한 설명
+         *  - https://joshua1988.github.io/web-development/javascript/javascript-asynchronous-operation/
+         *  - 자바스크립트 비동기 통신 방식에 대해 엄청 자세히 설명되어 있으니 꼭 보기 (저도 봤음)
+         *  - 시리즈 2, 3 까지 필수
+         * */
 
-    /** HTTP METHOD
-     * 1. GET       : Read
-     * 2. POST      : Create
-     * 3. PUT       : Update
-     * 4. DELETE    : Delete
-     * */
-    /** 2번, ajax 비동기 통신 */
-    $('#btnAjax').click(function (){
+        /** HTTP METHOD
+         * 1. GET       : Read
+         * 2. POST      : Create
+         * 3. PUT       : Update
+         * 4. DELETE    : Delete
+         * */
+        /** 2번, ajax 비동기 통신 */
+        $('#btnAjax').click(function (){
 
-        //debugger; // 크롬에 디버깅모드 걸리는데 F10 누르면 한칸, F8 누르면 전체 통과
+            //debugger; // 크롬에 디버깅모드 걸리는데 F10 누르면 한칸, F8 누르면 전체 통과
 
-        let params = {
-            userId : $('#userId').val(),
-            userPw : $('#userPw').val()
-        }
+            let params = {
+                userId : $('#userId').val(),
+                userPw : $('#userPw').val()
+            }
 
-        let jsonParams = JSON.stringify(params);
+            let jsonParams = JSON.stringify(params);
 
-        // setTimeout(() =>    // 에이작스 예제 때문에 일부러 3초 뒤에 실행되게 작성
+            // setTimeout(() =>    // 에이작스 예제 때문에 일부러 3초 뒤에 실행되게 작성
 
             // 아래 파라미터를 담아 url 호출
             $.ajax({
@@ -88,86 +88,86 @@ $(document).ready(function(){
                     alert("요청이 완료되었습니다.");
                 })
 
-        //, 3000);
+            //, 3000);
 
-        alert("아~~~ 위에꺼 에이작슨지 뭔지 관심 없구연~~");
-    })
+            alert("아~~~ 위에꺼 에이작슨지 뭔지 관심 없구연~~");
+        })
 
-    /** 3번, fetch 비동기 통신 */
-    $('#btnFetch').click(it=>{
+        /** 3번, fetch 비동기 통신 */
+        $('#btnFetch').click(it=>{
 
-        /**
-         * HTTP 통신 스테이터스 (로그인 버튼 ★빵★ 누른 후)
-         * 1xx : 처리 중
-         * 2xx : 정상처리
-         * 3xx : 리다이렉션 필요 (페이지 주소가 이동됐거나 리소스 찾을 수 없을 때)
-         * 4xx : 클라이언트 오류
-         *  - id 정보를 입력하지 않았거나 등의 휴먼 에러나, 개발 이슈 등의 여러가지 문제, 가장 많이 발생
-         * 5xx : 서버 오류
-         *  - 서버의 상태가 정상이 아닐 때 발생
-         *  - 네트워크 오류나, 서버 자체의 오류나, 개발 소스의 오류 등 백엔드에서 오류가 났을 때 발생
-         * */
+            /**
+             * HTTP 통신 스테이터스 (로그인 버튼 ★빵★ 누른 후)
+             * 1xx : 처리 중
+             * 2xx : 정상처리
+             * 3xx : 리다이렉션 필요 (페이지 주소가 이동됐거나 리소스 찾을 수 없을 때)
+             * 4xx : 클라이언트 오류
+             *  - id 정보를 입력하지 않았거나 등의 휴먼 에러나, 개발 이슈 등의 여러가지 문제, 가장 많이 발생
+             * 5xx : 서버 오류
+             *  - 서버의 상태가 정상이 아닐 때 발생
+             *  - 네트워크 오류나, 서버 자체의 오류나, 개발 소스의 오류 등 백엔드에서 오류가 났을 때 발생
+             * */
 
-        // 1. GET
-        // 조회 (userId = kja01)
-        // GET 방식은 기본 설정값 (default)
-        // [요청 : request], [응답 : response]
-        // 해당 메소드의 응답 객체는 JSON
-        fetch("http://localhost:8080/find/kja01")
-            .then((response) => response.json())
-            .then((data) => console.log(data))  // data는 JSON 형식어야 함 (@ResponseBody)
+            // 1. GET
+            // 조회 (userId = kja01)
+            // GET 방식은 기본 설정값 (default)
+            // [요청 : request], [응답 : response]
+            // 해당 메소드의 응답 객체는 JSON
+            fetch("http://localhost:8080/find/kja01")
+                .then((response) => response.json())
+                .then((data) => console.log(data))  // data는 JSON 형식어야 함 (@ResponseBody)
 
-        // 2. POST (은닉)
-        // case 1. Form 등을 사용해서 데이터를 만들어 보낼 때
-        // case 2. 보내는 데이터의 양이 많을 때
-        // case 3. 비밀번호 등 개인정보를 보낼 때
-        // GET 방식 이외의 방식은 아래 설정 필요
-        // 1). method: "POST",
-        // 2). headers : {"Content-type" : "application/json"}
-        // 3). body : JSON.stringify({userId: "kja01"})
-        // JSON? stringify?
-        fetch("http://localhost:8080/find", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                userId: "kja01"
-                // , 혹은 $('form').serialize()
-            }),
+            // 2. POST (은닉)
+            // case 1. Form 등을 사용해서 데이터를 만들어 보낼 때
+            // case 2. 보내는 데이터의 양이 많을 때
+            // case 3. 비밀번호 등 개인정보를 보낼 때
+            // GET 방식 이외의 방식은 아래 설정 필요
+            // 1). method: "POST",
+            // 2). headers : {"Content-type" : "application/json"}
+            // 3). body : JSON.stringify({userId: "kja01"})
+            // JSON? stringify?
+            fetch("http://localhost:8080/find", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    userId: "kja01"
+                    // , 혹은 $('form').serialize()
+                }),
             }).then((response) => response.json())
-              .then((data) => console.log(data))
+                .then((data) => console.log(data))
 
-        // 3. PUT/PATCH
-        // 수정 기능을 담당
-        // PUT   : 전체 수정
-        // PATCH : 일부 수정
-        fetch("http://localhost:8080/find", {
-            method: "PUT",  //"PATCH"
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                userId: "kja01"
-            }),
+            // 3. PUT/PATCH
+            // 수정 기능을 담당
+            // PUT   : 전체 수정
+            // PATCH : 일부 수정
+            fetch("http://localhost:8080/find", {
+                method: "PUT",  //"PATCH"
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    userId: "kja01"
+                }),
             }).then((response) => response.json())
-            .then((data) => console.log(data))
+                .then((data) => console.log(data))
 
-        // 4. DELETE
-        // 삭제 기능을 담당
-        // 보낼 데이터가 없기 때문에 header, body 옵션이 필요 없음
-        fetch("http://localhost:8080/find/kja01", {
-            method: "PUT",  //"PATCH"
-        }).then((response) => response.json())
-            .then((data) => console.log(data))
+            // 4. DELETE
+            // 삭제 기능을 담당
+            // 보낼 데이터가 없기 때문에 header, body 옵션이 필요 없음
+            fetch("http://localhost:8080/find/kja01", {
+                method: "PUT",  //"PATCH"
+            }).then((response) => response.json())
+                .then((data) => console.log(data))
 
-    })
+        })
 
-    function lfn_callback(result){
-        alert("콜백함수 실행!!");
-        alert(result.userNm);
-    }
-});
+        function lfn_callback(result){
+            alert("콜백함수 실행!!");
+            alert(result.userNm);
+        }
+    });
 </script>
 <body>
 

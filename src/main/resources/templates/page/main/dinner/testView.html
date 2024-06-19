@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:color="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>랜덤 좌석 배정</title>
+    <style>
+        body {
+            background-color: #233240; /* 전체 배경색을 어두운 청색으로 설정 */
+            color: #d3d3d4; /* 전체 글자 색상을 연한 회색으로 설정 */
+        }
+        .error {
+            border: 2px solid red; /* 에러가 발생한 입력 필드의 테두리를 빨간색으로 표시 */
+        }
+        .seat {
+            width: 170px; /* 좌석의 너비를 170픽셀로 설정 */
+            height: 170px; /* 좌석의 높이를 170픽셀로 설정 */
+            background-color: #d3d3d4; /* 좌석의 배경색을 연한 회색으로 설정 */
+            margin: 5px; /* 좌석 주변의 여백을 5픽셀로 설정 */
+            display: inline-block; /* 좌석을 가로로 나열하도록 설정 */
+            text-align: center; /* 좌석 내의 텍스트를 가운데 정렬 */
+            vertical-align: middle; /* 좌석 내의 텍스트를 수직으로 가운데 정렬 */
+            line-height: 160px; /* 텍스트의 라인 높이를 160픽셀로 설정, 수직 정렬을 위함 */
+            cursor: pointer; /* 마우스 포인터를 올렸을 때 손가락 모양으로 변경 */
+            font-size: 25px; /* 텍스트의 크기를 25픽셀로 설정 */
+            font-weight: bold; /* 텍스트를 굵게 표시 */
+            border-radius: 10px; /* 테두리의 모서리를 둥글게 처리 */
+            transition: all 0.5s ease; /* 모든 변화(색상, 크기)를 부드럽게 전환 */
+        }
+        .occupied {
+            color: steelblue; /* 사람 이름 글자 색 = steelblue */
+        }
+        .empty {
+            color: #2c3e50 /* 자리 배정 안된 곳 숫자 남색 */
+        }
+        @keyframes flickerAnimation {
+            0% { opacity: 1; } /* 애니메이션 시작 시점: 투명도가 100%(완전 불투명) */
+            50% { opacity: 0.5; } /* 애니메이션 중간 시점: 투명도가 50%(반투명) */
+            100% { opacity: 1; } /* 애니메이션 중간 시점: 투명도가 다시 100%(불투명으로 돌아감) */
+        }
+        .flicker {
+            animation: flickerAnimation 0.5s infinite; /* flickerAnimation을 0.5초 간격으로 무한 반복 */
+        }
+        .highlight {
+            border: 3px solid yellow; /* 이미 등록된 좌석 강조 표시 */
+            animation: flickerAnimation 1s infinite; /* 강조 표시 깜빡임 */
+        }
+        button {
+            background-color: #ffc107; /* 버튼의 배경색을 노란색으로 설정 */
+            color: #000000; /* 버튼의 텍스트 색상을 검은색으로 설정 */
+        }
+    </style>
+    <script src="/js/jquery.js"></script> <!-- jQuery 라이브러리 로드 -->
+    <script src="https://tistory4.daumcdn.net/tistory/3134841/skin/images/confetti_v2.js"></script> <!-- 꽃가루 효과 스크립트 -->
+    <style>
+        canvas { z-index: 10; pointer-events: none; position: fixed; top: 0; transform: scale(1.1); }
+    </style>
+    <script>
+        let refreshButton; // 새로고침 버튼 전역변수로 선언
+
+        $(document).ready(function () {
+            refreshButton = $('button[name="btnRefresh"]'); // 새로고침 버튼 전역변수로 할당
+
+            $('#btnInsert').on('click', function () {
+                let userName = $('#username').val(); // 사용자가 입력한 이름을 가져옴
+                if (!userName) {
+                    alert("이름을 입력해주세요."); // 이름이 비어있으면 경고 메시지 출력
+                    $('#username').addClass('error').focus(); // 에러 클래스를 추가하고 포커스 이동
+                    return; // 함수 종료
+                }
+
+                $.ajax({
+                    type: 'POST', // HTTP 메서드 타입을 POST로 설정
+                    url: '/nameInsert.do', // 서버에 요청을 보낼 URL
+                    data: JSON.stringify({userName: userName}), // JSON 형태로 사용자 이름 데이터를 보냄
+                    contentType: 'application/json; charset=UTF-8', // 데이터 타입을 JSON으로 설정하고 인코딩을 UTF-8로 지정
+                    success: function (result) { // 요청이 성공적으로 완료되면 실행되는 콜백 함수
+                        if (result.errMsg) { // 서버 응답에 errMsg가 있으면 (에러 메시지가 있으면)
+                            alert(result.errMsg); // 에러 메시지를 경고창으로 표시
+                            highlightSeat(result.sheetNum); // 이미 등록된 좌석 강조 함수 호출, 서버로부터 받은 좌석 번호를 인자로 전달
+                        } else { // 에러 메시지가 없으면
+                            animateEmptySeats(result.sheetNum, userName); // 빈 좌석 애니메이션 함수 호출, 서버로부터 받은 좌석 번호와 사용자 이름을 인자로 전달
+                        }
+                    }
+                });
+
+                function animateEmptySeats(assignedSeatNum, userName) {
+                    let emptySeats = $('.seat').filter(function () { // 모든 좌석 중에서
+                        return $(this).hasClass('empty'); // 빈 좌석만 필터링하여 선택! hasClass 함수란 클래스명이 일치하는 것이 있을 경우 true 를 반환
+                    });
+                    let flickerDuration = 200; // 각 반짝임의 지속 시간 (밀리초 단위)
+                    emptySeats.each(function (index, seat) { // 빈 좌석 각각에 대해 반복
+                        $(seat).delay(index * flickerDuration).queue(function (next) { // 좌석마다 딜레이를 줘서 순차적으로 애니메이션 실행
+                            $(seat).addClass('flicker'); // 좌석에 반짝임 효과 추가
+                            next(); // 다음으로 이동
+                        }).delay(flickerDuration).queue(function (next) { // 반짝임 지속 시간 동안 딜레이
+                            $(seat).removeClass('flicker'); // 좌석에서 반짝임 효과 제거
+                            if (index === emptySeats.length - 1) { // 모든 빈 좌석에 대해 반복이 끝나면
+                                setTimeout(function () { // 반짝임이 끝난 후 실행
+                                    $('#seat' + assignedSeatNum).removeClass('empty').addClass('occupied').text(userName); // 지정된 좌석의 상태를 빈 좌석에서 차 있는 좌석으로 변경하고 사용자 이름을 텍스트로 설정
+                                    lfn_search(); // 좌석 상태를 새로고침
+                                    alert("자리번호 " + assignedSeatNum + "번에 배치되었습니다."); // 자리 배치 완료 메시지를 경고창으로 표시
+                                    startConfetti(); // 꽃가루 효과 시작
+                                }, 500); // 0.5초 후에 실행
+                            }
+                            next(); // 다음으로 이동
+                        });
+                    });
+                }
+
+                // 중복 입력 시 좌석 강조 효과!!
+                function highlightSeat(seatNum) {
+                    $('#seat' + seatNum).addClass('highlight'); // 강조 효과 추가
+                    setTimeout(function () {
+                        $('#seat' + seatNum).removeClass('highlight'); // 강조 효과 제거
+                    }, 3000); // 3초 후 강조 효과 제거
+                }
+
+                // 꽃가루 기능!!!
+                function startConfetti() {
+                    confetti.start(); // 꽃가루 효과 시작
+                    setTimeout(function() {
+                        confetti.stop(); // 5초 후 꽃가루 효과 중지
+                    }, 5000);
+                }
+            });
+
+            // 조회 기능
+            function lfn_search() {
+                $.ajax({
+                    type: 'POST', //HTTP 요청 메서드를 POST로 설정
+                    url: '/selectView.do', // 서버에 조회 요청을 보낼 URL
+                    data: JSON.stringify({userName: 'test'}), // 요청 데이터! 서버에 보낼 데이터를 JSON 문자열로 변환. 여기서는 사용자 이름 'test'를 보냄
+                    contentType: 'application/json; charset=UTF-8' // 데이터 타입을 JSON으로 설정
+                })
+                    // 요청이 성공적으로 완료되면 실행되는 콜백 함수
+                    .done(function (result) {
+                        // 모든 좌석의 반짝임, 차 있음, 빈 상태, 강조 표시 클래스를 제거하고 텍스트를 초기화
+                        $('.seat').removeClass('flicker occupied empty').text('').each(function () {
+                            // 좌석의 ID에서 'seat'를 제거하여 좌석 번호만 텍스트로 설정하고, 빈 좌석 클래스를 추가
+                            $(this).addClass('empty').text($(this).attr('id').replace('seat', '')); // 모든 좌석을 초기화하고 번호를 다시 설정
+                        });
+                        for (var i = 0; i < result.length; i++) { // 서버에서 받은 결과 배열을 반복
+                            // 좌석 번호와 일치하는 요소를 찾아서 빈 좌석 클래스를 제거하고 차 있는 좌석 클래스를 추가, 그리고 사용자 이름을 텍스트로 설정
+                            $('#seat' + result[i].sheetNum).removeClass('empty').addClass('occupied').text(result[i].userName); // 배정된 좌석에 이름 표시
+                        }
+                    });
+            }
+
+            // 엔터 치면 두근두근 버튼 클릭 되도록!!!!!!
+            $("#username").keyup(function (event){
+                if(event.which === 13)
+                    $("#btnInsert").click();
+            });
+
+            /* 빈 좌석에 반짝임 효과 적용 */
+            function glitterSeat() {
+                let emptySeats = $('.seat').filter(function () {
+                    return $(this).text() === '';
+                }); /* 빈 좌석 선택 */
+                let flicker = 300; /* 반짝임 지속 시간 설정 */
+                emptySeats.each(function (index, seat) {
+                    $(this).addClass('flicker'); /* 반짝임 효과 추가 */
+                });
+            }
+
+            glitterSeat(); /* 빈 좌석에 반짝임 효과 적용 함수 호출 */
+            lfn_search(); // 페이지 로드 시 조회 함수 호출
+        });
+
+    </script>
+</head>
+<body>
+<div class ="buttonContainer">
+    <button class="canvasBtn" id="stopButton" onclick="confetti.stop()">Stop Confetti</button>
+    <button class="canvasBtn" id="startButton" onclick="confetti.start()">Drop Confetti</button>
+</div>
+
+<canvas id="canvas"></canvas>
+
+<h2>회식 자리 뽑기</h2> <!-- 페이지의 제목 -->
+
+<p th:text="${randomMsg}"></p>
+<div>
+    <label for="username">이름:</label> <!-- 사용자 이름 입력을 위한 라벨 -->
+    <input type="text" id="username" name="username" placeholder="이름을 입력해주세요." required> <!-- 이름 입력 필드 -->
+    <button id="btnInsert">두근두근</button> <!-- 좌석 배정을 시작하는 버튼 -->
+    <button name="btnRefresh" type="button" onclick="window.location.reload()">새로고침</button> <!-- 새로고침 버튼 -->
+</div>
+<div id="seats" style="text-align: center; margin: 90px">
+    <!-- 좌석 영역 시작, 총 24개의 좌석 -->
+    <div class="seat empty" id="seat1">1</div>
+    <div class="seat empty" id="seat2">2</div>
+    <div class="seat empty" id="seat3">3</div>
+    <div class="seat empty" id="seat4">4</div>
+    <div class="seat empty" id="seat5">5</div>
+    <div class="seat empty" id="seat6">6</div>
+    <div class="seat empty" id="seat7">7</div>
+    <div class="seat empty" id="seat8">8</div>
+    <div class="seat empty" id="seat9">9</div>
+    <div class="seat empty" id="seat10">10</div>
+    <div class="seat empty" id="seat11">11</div>
+    <div class="seat empty" id="seat12">12</div>
+    <div class="seat empty" id="seat13">13</div>
+    <div class="seat empty" id="seat14">14</div>
+    <div class="seat empty" id="seat15">15</div>
+    <div class="seat empty" id="seat16">16</div>
+    <div class="seat empty" id="seat17">17</div>
+    <div class="seat empty" id="seat18">18</div>
+    <div class="seat empty" id="seat19">19</div>
+    <div class="seat empty" id="seat20">20</div>
+    <div class="seat empty" id="seat21">21</div>
+    <div class="seat empty" id="seat22">22</div>
+    <div class="seat empty" id="seat23">23</div>
+    <div class="seat empty" id="seat24">24</div>
+</div>
+</body>
+</html>

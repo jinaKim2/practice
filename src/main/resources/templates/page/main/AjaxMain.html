@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인(김진아)</title>
+</head>
+<style>
+    .error{
+        border:2px solid red;
+    }
+
+   body {
+       background-color: #1a1a1a;
+       color: #e6e6e6;
+   }
+
+   button {
+       background-color: #0080ff;
+       color: #e6e6e6;
+       padding: 10px 20px;
+       border-radius: 5px;
+       margin-right: 10px;
+   }
+
+
+</style>
+<script th:src="@{/js/jquery.js}"></script>
+<script>
+    $(document).ready(function() {
+        $('#btnLogin').on('click', function () {
+            let userData = {
+                userId: $('#userId').val(),
+                userPw: $('#userPw').val()
+            }
+            let jsonParams = JSON.stringify(userData);
+
+            console.log('userData : ' + userData);
+            console.log('jsonParams : ' + jsonParams);
+
+            $.ajax({
+                type: 'POST',
+                url: '/AjaxLogin.do',
+                data: jsonParams,
+                contentType: 'application/json; charset=UTF-8'
+            })
+
+                .done(function (result) {
+
+                    debugger;
+
+            if(result == '')
+                // 로그인 실패
+                $('#userId, #userPw').addClass('error');
+
+            else
+                //로그인 성공 시
+                window.location.href = '/main2.do'
+
+            function lfn_callback(result) {
+
+            }
+            lfn_callback(result)
+
+        });
+
+
+
+            /*
+               .fail(function (xhr, status, errorThrown) {
+                   alert("오류가 발생했습니다.");
+                   console.log("오류명 : " + errorThrown);
+                   console.log("상태 : " + status);
+
+               })
+               .always(function (xhr, status) {
+                   alert("요청이 완료되었습니다.");
+               })
+
+
+       })*/
+        })
+
+    })
+
+</script>
+<body>
+
+<form id="loginForm" name="loginForm" method="post">
+    <div style="text-align: center; width: 25%; margin: 0 auto; margin-top: 15%; border: 1px solid #dadce0; border-radius: 8px;">
+        <div style="">
+            <div style="padding: 10px;">
+                <p th:text="${msg}"></p>
+            </div>
+            <div style="padding: 10px;">
+                <span style="display: inline-block; width: 7%;"> ID </span>
+                <input type="text" th:id="userId" th:name="userId"/>
+            </div>
+            <div style="padding: 10px; margin-bottom: 15px;">
+                <span style="display: inline-block; width: 7%;"> PW </span>
+                <input type="text" th:id="userPw" th:name="userPw"/>
+            </div>
+
+        </div>
+    </div>
+</form>
+<div style="text-align: center; margin: 10px;">
+    <button onclick="location.href='AjaxSignUp.do'">회원가입</button>
+    <button id="btnLogin" class="t">로그인</button>
+
+</div>
+
+</body>
+
+</html>
